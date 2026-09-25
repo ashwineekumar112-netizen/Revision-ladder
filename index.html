@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Revision Ladder</title>
+<meta name="theme-color" content="#1F6F5C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Revision">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F3F6F5; --surface:#FFFFFF; --sunk:#E8EEEC; --ink:#15201D; --muted:#5B6B66; --line:#D5DEDB;
+  --accent:#1F6F5C; --accent-ink:#FFFFFF; --accent-soft:#D8EDE6;
+  --hi:#F2C94C; --hi-soft:#FBF0C9; --bad:#B8432F; --bad-soft:#F6DDD7; --good:#2E7D4F;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1513; --surface:#16201D; --sunk:#1D2926; --ink:#E3ECE9; --muted:#93A5A0; --line:#2A3834;
+    --accent:#5CC3A5; --accent-ink:#0B1411; --accent-soft:#1D3A32;
+    --hi:#E9C052; --hi-soft:#3A331C; --bad:#F08A76; --bad-soft:#3C231E; --good:#6FCF97;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1513; --surface:#16201D; --sunk:#1D2926; --ink:#E3ECE9; --muted:#93A5A0; --line:#2A3834;
+  --accent:#5CC3A5; --accent-ink:#0B1411; --accent-soft:#1D3A32;
+  --hi:#E9C052; --hi-soft:#3A331C; --bad:#F08A76; --bad-soft:#3C231E; --good:#6FCF97;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:760px;margin:0 auto}
+header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:22px 12px}
+h1{font:700 30px/1.05 var(--display);letter-spacing:-.01em;margin:0}
+.sub{color:var(--muted);font-size:13px;margin-top:4px}
+.countdown{font:500 13px var(--mono);color:var(--muted);text-align:right}
+.countdown b{display:block;font:700 26px/1 var(--display);color:var(--ink)}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;padding-block:8px;border-bottom:1px solid var(--line);overflow-x:auto}
+nav.tabs button{flex:1 0 auto;border:0;background:transparent;color:var(--muted);font:600 14px var(--body);padding:8px 12px;border-radius:8px;cursor:pointer}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+nav.tabs .n{font:500 11px var(--mono);margin-left:4px;background:var(--hi);color:#2A2205;border-radius:9px;padding:1px 6px}
+section.view{padding-top:18px;display:flex;flex-direction:column;gap:22px}
+h2{font:700 18px var(--display);margin:0 0 8px;display:flex;align-items:baseline;gap:8px}
+h2 .c{font:500 12px var(--mono);color:var(--muted)}
+.eyebrow{font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.item{display:grid;grid-template-columns:1fr auto;gap:8px 12px;padding:12px 14px;border-top:1px solid var(--line);align-items:center}
+.item:first-child{border-top:0}
+.item.overdue{box-shadow:inset 3px 0 0 var(--bad)}
+.item.today{box-shadow:inset 3px 0 0 var(--hi)}
+.t-title{font-weight:600}
+.meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12.5px;color:var(--muted);margin-top:3px}
+.chip{font:600 11px var(--body);letter-spacing:.03em;padding:2px 7px;border-radius:6px;background:var(--sunk);color:var(--ink)}
+.chip.weak{background:var(--bad-soft);color:var(--bad)}
+.chip.step{background:var(--accent-soft);color:var(--accent)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 13px var(--body);padding:7px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,nav.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,textarea,select{font:15px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%}
+input.score{width:84px;padding:6px 8px;font-family:var(--mono)}
+.ladder{display:flex;gap:3px;align-items:center}
+.ladder i{width:18px;height:6px;border-radius:3px;background:var(--line)}
+.ladder i.on{background:var(--accent)}
+.ladder i.cur{background:var(--hi)}
+.empty{padding:18px;color:var(--muted);text-align:center;border:1px dashed var(--line);border-radius:12px}
+.summary{display:flex;gap:10px;flex-wrap:wrap}
+.stat{flex:1 1 140px;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.stat b{display:block;font:700 26px/1.1 var(--display)}
+.stat span{font-size:12.5px;color:var(--muted)}
+.stat.alert b{color:var(--bad)}
+form.add{display:flex;flex-direction:column;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label,.lbl{font:600 13px var(--body)}
+.hint{font-size:12.5px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1px solid var(--line);background:var(--bg);color:var(--ink);font:500 13px var(--body);padding:6px 10px;border-radius:18px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row>.field{flex:1 1 160px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{border:0;background:var(--surface);color:var(--muted);font:600 14px var(--body);padding:8px 16px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.schedule{font:13px var(--mono);color:var(--muted);background:var(--sunk);border-radius:8px;padding:10px 12px;line-height:1.7}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.toolbar input{flex:1 1 200px}
+.toolbar select{flex:0 1 180px}
+.detail{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;padding-top:8px;border-top:1px dashed var(--line)}
+.hist{font:12.5px var(--mono);color:var(--muted)}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:grid;grid-template-columns:110px 1fr 90px;gap:10px;align-items:center;font-size:13px}
+.bar .track{height:10px;background:var(--sunk);border-radius:5px;overflow:hidden;display:flex}
+.bar .fill{background:var(--accent)}
+.bar .fillw{background:var(--bad)}
+.bar .v{font:12px var(--mono);color:var(--muted);text-align:right}
+.load{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;align-items:end;height:110px;padding-top:14px}
+.load div{display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end}
+.load .col{width:100%;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
+.load .col.t{background:var(--hi)}
+.load small{font:10px var(--mono);color:var(--muted)}
+.load em{font:10px var(--mono);font-style:normal;color:var(--ink)}
+.heat{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;max-width:340px}
+.heat span{aspect-ratio:1;border-radius:4px;background:var(--sunk)}
+.heat span.l1{background:var(--accent-soft)}
+.heat span.l2{background:color-mix(in srgb,var(--accent) 60%,var(--accent-soft))}
+.heat span.l3{background:var(--accent)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
+.notice{background:var(--hi-soft);border-radius:10px;padding:12px 14px;font-size:14px}
+table.tests{width:100%;border-collapse:collapse;font-size:14px}
+table.tests th{text-align:left;font:600 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line)}
+table.tests td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+@media (max-width:520px){
+  .item{grid-template-columns:1fr}
+  .actions{justify-content:flex-start}
+  .bar{grid-template-columns:84px 1fr 70px}
+  h1{font-size:26px}
+  .countdown{text-align:left}
+  .sync{justify-content:flex-start}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+<style>
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;padding-top:env(safe-area-inset-top,0px)}
+.sync{font:500 12px var(--mono);color:var(--muted);display:flex;gap:6px;align-items:center;justify-content:flex-end;margin-top:6px}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--good)}
+.sync.wait i{background:var(--hi)}
+.sync.err i{background:var(--bad)}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+code{font:13px var(--mono);background:var(--sunk);padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Revision Ladder</h1>
+      <div class="sub">NEET PG 2027 · Day 1 → 3 → 7 → 28 → 60</div>
+    </div>
+    <div>
+      <div class="countdown" id="countdown"></div>
+      <div class="sync" id="sync" hidden><i></i><span></span></div>
+    </div>
+  </header>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-v="today" aria-selected="true" id="tab-today">Today</button>
+    <button role="tab" data-v="add" aria-selected="false" id="tab-add">+ Log</button>
+    <button role="tab" data-v="topics" aria-selected="false" id="tab-topics">Topics</button>
+    <button role="tab" data-v="tests" aria-selected="false" id="tab-tests">Tests</button>
+    <button role="tab" data-v="progress" aria-selected="false" id="tab-progress">Progress</button>
+    <button role="tab" data-v="settings" aria-selected="false" id="tab-settings" aria-label="Backup and settings">⚙</button>
+  </nav>
+  <main id="app"><section class="view"><div class="empty">Loading…</div></section></main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+const SUBJECTS=["Anatomy","Physiology","Biochemistry","Pathology","Pharmacology","Microbiology","FMT","PSM","ENT","Ophthalmology","Medicine","Surgery","OBG","Pediatrics","Orthopedics","Dermatology","Psychiatry","Anaesthesia","Radiology"];
+const STEPS=[{d:1,kind:"Revise"},{d:3,kind:"MCQs"},{d:7,kind:"Revise"},{d:28,kind:"MCQs"},{d:60,kind:"Final revise"}];
+const WEAK_CUTOFF=60, REDO_GAP=3;
+
+// ---------- storage (this device only) ----------
+const lsGet=(k,def)=>{try{const v=localStorage.getItem(k);return v==null?def:JSON.parse(v)}catch(e){return def}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}};
+const LS={data:"rl-data",exam:"rl-exam-date",view:"rl-view",backup:"rl-last-backup",remind:"rl-reminder-added"};
+let data=lsGet(LS.data,{topics:[],tests:[]});
+let topics=data.topics||[], tests=data.tests||[];
+let view=lsGet(LS.view,"today");
+let pendingRender=false, openId=null, confirmDel=null;
+const drafts={};
+let addState={subject:null,source:"Theory"};
+let filter={q:"",subject:"",status:""};
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+
+// ---------- dates ----------
+const pad=n=>String(n).padStart(2,"0");
+const toStr=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const today=()=>toStr(new Date());
+const parse=s=>{const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)};
+const addDays=(s,n)=>{const d=parse(s);d.setDate(d.getDate()+n);return toStr(d)};
+const diff=(a,b)=>Math.round((parse(b)-parse(a))/86400000);
+const MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const fmt=s=>{if(!s)return"";const d=parse(s);return d.getDate()+" "+MON[d.getMonth()]};
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)).replace(/-/g,"").slice(0,16);
+
+function parseScore(v){
+  v=String(v||"").trim().replace("%","");
+  if(!v)return null;
+  if(v.includes("/")){const [a,b]=v.split("/").map(Number);if(b>0&&a>=0)return Math.round(a/b*100);return NaN}
+  let n=Number(v); if(isNaN(n))return NaN;
+  if(n>0&&n<=1&&v.includes("."))n=n*100;
+  return n>=0&&n<=100?Math.round(n):NaN;
+}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2600)}
+
+// ---------- saving ----------
+function saveLocal(){
+  if(!lsSet(LS.data,{topics,tests,savedAt:Date.now()}))toast("Couldn't save on this device. Is private/incognito mode on?");
+}
+function applyLocal(op){
+  const arr=op.coll==="topics"?topics:tests;
+  if(op.type==="put"){const i=arr.findIndex(x=>x.id===op.doc.id);if(i>=0)arr[i]=op.doc;else arr.push(op.doc)}
+  if(op.type==="patch"){const i=arr.findIndex(x=>x.id===op.id);if(i>=0)arr[i]=Object.assign({},arr[i],op.fields)}
+  if(op.type==="del"){const i=arr.findIndex(x=>x.id===op.id);if(i>=0)arr.splice(i,1)}
+}
+function commit(ops,msg){ops.forEach(applyLocal);saveLocal();if(msg)toast(msg);render()}
+function daysSinceBackup(){const b=lsGet(LS.backup,null);return b?Math.floor((Date.now()-b)/86400000):null}
+function paintSync(){
+  const el=document.getElementById("sync");el.hidden=false;
+  const d=daysSinceBackup();
+  el.className="sync"+(topics.length&&(d===null||d>=7)?" wait":"");
+  el.querySelector("span").textContent="Saved on this device"+(topics.length?(d===null?" · no backup yet":` · backup ${d===0?"today":d+"d ago"}`):"");
+}
+function downloadFile(name,text,type){
+  const blob=new Blob([text],{type});const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);
+}
+function backup(){
+  downloadFile(`revision-ladder-backup-${today()}.json`,JSON.stringify({app:"revision-ladder",version:1,exported:new Date().toISOString(),topics,tests}),"application/json");
+  lsSet(LS.backup,Date.now());paintSync();toast("Backup file downloaded. Keep it in Google Drive or WhatsApp it to yourself.");
+}
+function exportCsv(){
+  const cols=["Subject","Topic","Type","Studied","First MCQ %","Weak","Step","Next due","Revisions","Notes"];
+  const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  const rows=topics.map(t=>[t.subject,t.topic,t.source,t.studied,t.score??"",t.weak?"Y":"",stepLabel(t),t.nextDue||"",(t.history||[]).map(h=>`R${h.step} ${h.date}${h.score!=null?" "+h.score+"%":""}`).join("; "),t.note].map(q).join(","));
+  downloadFile(`revision-ladder-${today()}.csv`,"﻿"+[cols.map(q).join(","),...rows].join("\n"),"text/csv");
+}
+function calendarLink(){
+  const d=today().replace(/-/g,"");
+  const p=new URLSearchParams({action:"TEMPLATE",text:"Revision Ladder: check today's revisions",
+    dates:`${d}T070000/${d}T071500`,ctz:"Asia/Kolkata",recur:"RRULE:FREQ=DAILY",
+    details:"Open Revision Ladder and clear overdue + due-today topics. Log yesterday's topics if you haven't.\n\n"+location.href.split("#")[0]});
+  return "https://calendar.google.com/calendar/render?"+p.toString();
+}
+
+// ---------- countdown ----------
+function renderCountdown(){
+  const el=document.getElementById("countdown");const ex=lsGet(LS.exam,"");
+  if(ex){const n=diff(today(),ex);el.innerHTML=`<b class="mono">${n}</b>days to exam (${fmt(ex)} ${ex.slice(0,4)})`}
+  else el.innerHTML=`<b class="mono">${topics.filter(t=>!t.backlog).length}</b>topics logged`;
+}
+
+// ---------- schedule logic ----------
+function newTopic(subject,topic,source,studied,score,note){
+  return {id:uid(),subject,topic,source,studied,score:score??null,weak:score!=null&&score<WEAK_CUTOFF,note:note||"",stage:0,nextDue:addDays(studied,STEPS[0].d),history:[],backlog:false,created:Date.now()};
+}
+function completeStep(t,score){
+  const d=today(), step=STEPS[t.stage];
+  const h=(t.history||[]).slice(); h.push({step:t.stage+1,kind:step.kind,date:d,score:score??null,due:t.nextDue});
+  const upd={history:h};
+  if(step.kind==="MCQs"&&score!=null&&score<WEAK_CUTOFF){
+    upd.weak=true; upd.nextDue=addDays(d,REDO_GAP);
+    return {upd,msg:`Score under ${WEAK_CUTOFF}%. Same MCQ step again on ${fmt(upd.nextDue)}.`};
+  }
+  const ns=t.stage+1; upd.stage=ns;
+  if(score!=null&&score>=75&&t.weak&&step.kind==="MCQs")upd.weak=false;
+  if(ns>=STEPS.length){upd.nextDue=null;return {upd,msg:"Ladder complete for this topic."}}
+  upd.nextDue=addDays(d,STEPS[ns].d-step.d);
+  return {upd,msg:`Done. Next: ${STEPS[ns].kind} on ${fmt(upd.nextDue)}.`};
+}
+
+// ---------- views ----------
+function ladder(t){
+  return `<span class="ladder" title="Step ${Math.min(t.stage+1,STEPS.length)} of ${STEPS.length}">${STEPS.map((s,i)=>`<i class="${i<t.stage?"on":(i===t.stage&&t.nextDue?"cur":"")}"></i>`).join("")}</span>`;
+}
+function stepLabel(t){if(t.stage>=STEPS.length)return"Complete";const s=STEPS[t.stage];return `R${t.stage+1} · ${s.kind}`}
+function dueItem(t,cls){
+  const s=STEPS[t.stage]; const needsScore=s&&s.kind==="MCQs"; const late=diff(t.nextDue,today());
+  return `<div class="item ${cls}" data-id="${t.id}">
+    <div>
+      <div class="t-title">${esc(t.topic)}</div>
+      <div class="meta"><span class="chip">${esc(t.subject)}</span><span class="chip step">${stepLabel(t)}</span>${t.weak?'<span class="chip weak">Weak</span>':""}${ladder(t)}
+      <span class="mono">${late>0?`${late}d overdue`:"due today"}</span></div>
+    </div>
+    <div class="actions">
+      ${needsScore?`<input class="score" id="sc-${t.id}" placeholder="18/25" inputmode="decimal" aria-label="MCQ score for ${esc(t.topic)}" value="${esc(drafts[t.id]||"")}">`:""}
+      <button class="btn primary" data-act="done" data-id="${t.id}">Done</button>
+      <button class="btn ghost" data-act="snooze" data-id="${t.id}">Tomorrow</button>
+    </div>
+  </div>`;
+}
+function viewToday(){
+  const td=today(); const active=topics.filter(t=>!t.backlog&&t.nextDue);
+  const overdue=active.filter(t=>t.nextDue<td).sort((a,b)=>a.nextDue.localeCompare(b.nextDue));
+  const due=active.filter(t=>t.nextDue===td);
+  const soon=active.filter(t=>t.nextDue>td&&t.nextDue<=addDays(td,7));
+  const studiedToday=topics.filter(t=>t.studied===td).length;
+  const doneToday=topics.reduce((n,t)=>n+(t.history||[]).filter(h=>h.date===td).length,0);
+  let h=`<div class="summary">
+    <div class="stat ${overdue.length?"alert":""}"><b class="mono">${overdue.length}</b><span>overdue</span></div>
+    <div class="stat"><b class="mono">${due.length}</b><span>due today</span></div>
+    <div class="stat"><b class="mono">${doneToday}</b><span>revisions done today</span></div>
+    <div class="stat"><b class="mono">${studiedToday}</b><span>new topics today</span></div>
+  </div>`;
+  if(!overdue.length&&!due.length)h+=`<div class="empty">${active.length?"Nothing due today. Log what you study with <b>+ Log</b>.":"No topics yet. Tap <b>+ Log</b> after your first lecture and paste the topic list, one per line."}</div>`;
+  if(overdue.length)h+=`<div><h2>Overdue <span class="c">${overdue.length}</span></h2><div class="list">${overdue.map(t=>dueItem(t,"overdue")).join("")}</div><div class="hint" style="margin-top:6px">Clear these first. The next step is counted from the day you actually revise.</div></div>`;
+  if(due.length)h+=`<div><h2>Due today <span class="c">${due.length}</span></h2><div class="list">${due.map(t=>dueItem(t,"today")).join("")}</div></div>`;
+  if(soon.length){
+    const by={};soon.forEach(t=>{(by[t.nextDue]=by[t.nextDue]||[]).push(t)});
+    h+=`<div><h2>Coming up this week <span class="c">${soon.length}</span></h2><div class="list">${Object.keys(by).sort().map(d=>`<div class="item"><div><div class="t-title mono">${fmt(d)} · ${by[d].length} item${by[d].length>1?"s":""}</div><div class="meta">${by[d].slice(0,6).map(t=>esc(t.topic)).join(" · ")}${by[d].length>6?" …":""}</div></div></div>`).join("")}</div></div>`;
+  }
+  return h;
+}
+function viewAdd(){
+  const s=STEPS.map(x=>`Day ${x.d}: ${x.kind}`).join(" → ");
+  return `<form class="add" id="addform" novalidate>
+    <div class="field"><span class="lbl">Subject</span><div class="chips" id="subj">${SUBJECTS.map(x=>`<button type="button" aria-pressed="${addState.subject===x}" data-subj="${x}">${x}</button>`).join("")}</div></div>
+    <div class="field"><label for="f-topics">Topics, one per line</label>
+      <textarea id="f-topics" rows="5" placeholder="Paste the chapter list from your lecture&#10;Hypothyroidism&#10;Thyrotoxicosis and thyroiditis"></textarea>
+      <span class="hint" id="f-count">Each line becomes its own topic with its own revision dates.</span></div>
+    <div class="row">
+      <div class="field"><span class="lbl">What you did</span><div class="seg" id="src"><button type="button" data-src="Theory" aria-pressed="${addState.source==="Theory"}">Theory</button><button type="button" data-src="MCQ" aria-pressed="${addState.source==="MCQ"}">MCQs</button></div></div>
+      <div class="field"><label for="f-date">Studied on</label><input type="date" id="f-date" value="${today()}" max="${today()}"></div>
+      <div class="field" id="scorewrap" ${addState.source==="MCQ"?"":"hidden"}><label for="f-score">MCQ score</label><input id="f-score" placeholder="18/25 or 72" inputmode="decimal"><span class="hint">Under ${WEAK_CUTOFF}% is flagged weak</span></div>
+    </div>
+    <div class="field"><label for="f-note">Weak points or notes (optional)</label><input id="f-note" placeholder="e.g. Diagnostic approach; mixed up Conn's vs Cushing's labs"></div>
+    <div class="schedule">Schedule: ${s}<br>Score under ${WEAK_CUTOFF}% on an MCQ step → the same step comes back ${REDO_GAP} days later.</div>
+    <div class="toolbar"><button class="btn primary" type="submit" id="f-save">Save topics</button><span class="hint" style="align-self:center">Subject and type stay selected so you can log the next batch.</span></div>
+  </form>`;
+}
+function viewTopics(){
+  const q=filter.q.toLowerCase(); const td=today();
+  let list=topics.filter(t=>(!filter.subject||t.subject===filter.subject)&&(!q||(t.topic+" "+t.note).toLowerCase().includes(q)));
+  if(filter.status==="weak")list=list.filter(t=>t.weak);
+  if(filter.status==="due")list=list.filter(t=>t.nextDue&&t.nextDue<=td);
+  if(filter.status==="done")list=list.filter(t=>!t.nextDue);
+  list.sort((a,b)=>(b.studied||"").localeCompare(a.studied||"")||(b.created||0)-(a.created||0));
+  const subjOpts=SUBJECTS.filter(s=>topics.some(t=>t.subject===s));
+  let h=`<div class="toolbar"><input id="q" placeholder="Search topics and notes" value="${esc(filter.q)}" aria-label="Search">
+    <select id="fs" aria-label="Subject"><option value="">All subjects</option>${subjOpts.map(s=>`<option ${filter.subject===s?"selected":""}>${s}</option>`).join("")}</select>
+    <select id="fst" aria-label="Status"><option value="">Any status</option><option value="due" ${filter.status==="due"?"selected":""}>Due / overdue</option><option value="weak" ${filter.status==="weak"?"selected":""}>Weak</option><option value="done" ${filter.status==="done"?"selected":""}>Ladder complete</option></select></div>`;
+  if(!list.length)return h+`<div class="empty">No topics match.</div>`;
+  h+=`<div><h2>${list.length} topic${list.length>1?"s":""}</h2><div class="list">`;
+  for(const t of list.slice(0,400)){
+    const open=openId===t.id;
+    h+=`<div class="item" data-id="${t.id}">
+      <div><div class="t-title">${esc(t.topic)}</div>
+      <div class="meta"><span class="chip">${esc(t.subject)}</span>${t.weak?'<span class="chip weak">Weak</span>':""}${ladder(t)}
+      <span class="mono">${t.nextDue?`next ${fmt(t.nextDue)}`:"complete"}</span>
+      ${t.score!=null?`<span class="mono">first MCQ ${t.score}%</span>`:""}</div></div>
+      <div class="actions"><button class="btn ghost" data-act="toggle" data-id="${t.id}" aria-expanded="${open}">${open?"Close":"Details"}</button></div>
+      ${open?`<div class="detail">
+        <div class="hist">Studied ${fmt(t.studied)} (${esc(t.source)})${(t.history||[]).map(x=>`<br>R${x.step} ${esc(x.kind)}: ${fmt(x.date)}${x.score!=null?` · ${x.score}%`:""}`).join("")}</div>
+        <div class="field"><label for="n-${t.id}">Notes</label><input id="n-${t.id}" value="${esc(t.note)}"></div>
+        <div class="actions" style="justify-content:flex-start">
+          <button class="btn" data-act="savenote" data-id="${t.id}">Save note</button>
+          <button class="btn" data-act="weak" data-id="${t.id}">${t.weak?"Unmark weak":"Mark weak"}</button>
+          <button class="btn" data-act="restart" data-id="${t.id}">Restudied today (restart)</button>
+          ${confirmDel===t.id?`<button class="btn danger" data-act="delyes" data-id="${t.id}">Yes, delete</button><button class="btn ghost" data-act="delno">Keep</button>`:`<button class="btn ghost" data-act="del" data-id="${t.id}">Delete</button>`}
+        </div></div>`:""}
+    </div>`;
+  }
+  return h+`</div></div>`;
+}
+function viewTests(){
+  const list=tests.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  return `<form class="add" id="testform" novalidate>
+    <div class="row">
+      <div class="field"><label for="t-type">Type</label><select id="t-type"><option>Grand test</option><option>Mini test</option><option>Subject test</option><option>Custom module</option></select></div>
+      <div class="field"><label for="t-name">Name</label><input id="t-name" placeholder="e.g. Marrow GT 4"></div>
+      <div class="field"><label for="t-date">Date</label><input type="date" id="t-date" value="${today()}"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label for="t-score">Score</label><input id="t-score" placeholder="142/200 or 71" inputmode="decimal"></div>
+      <div class="field"><label for="t-rank">Rank / percentile</label><input id="t-rank" placeholder="e.g. 2,340 or 94.1%ile"></div>
+    </div>
+    <div class="field"><label for="t-notes">Topics you got wrong</label><textarea id="t-notes" rows="3" placeholder="One per line, e.g. Medicine: SIADH vs CSW"></textarea></div>
+    <div><button class="btn primary" type="submit">Save test</button></div>
+  </form>
+  <div><h2>Test log <span class="c">${list.length}</span></h2>${list.length?`<div class="tablewrap"><table class="tests"><thead><tr><th>Date</th><th>Test</th><th>Score</th><th>Rank</th><th>Got wrong</th><th></th></tr></thead><tbody>${list.map(x=>`<tr><td class="mono">${fmt(x.date)}</td><td><b>${esc(x.name||x.type)}</b><br><span class="hint">${esc(x.type)}</span></td><td class="mono">${x.score!=null?x.score+"%":"–"}</td><td class="mono">${esc(x.rank||"–")}</td><td style="white-space:pre-line;min-width:180px">${esc(x.notes||"")}</td><td>${confirmDel===x.id?`<button class="btn danger" data-act="tdelyes" data-id="${x.id}">Delete</button>`:`<button class="btn ghost" data-act="tdel" data-id="${x.id}" aria-label="Delete test">×</button>`}</td></tr>`).join("")}</tbody></table></div>`:`<div class="empty">No tests logged yet. Log each grand test so you can see your score trend.</div>`}</div>`;
+}
+function viewProgress(){
+  const td=today(); const act=topics;
+  let h="";
+  let onTime=0,total=0; act.forEach(t=>(t.history||[]).forEach(x=>{total++; if(x.due&&x.date<=x.due)onTime++}));
+  const weak=topics.filter(t=>t.weak).length;
+  const days30=new Set(); act.forEach(t=>{if(diff(t.studied,td)<30)days30.add(t.studied);(t.history||[]).forEach(x=>{if(diff(x.date,td)<30)days30.add(x.date)})});
+  h+=`<div class="summary">
+    <div class="stat"><b class="mono">${act.length}</b><span>topics logged</span></div>
+    <div class="stat"><b class="mono">${total?Math.round(onTime/total*100)+"%":"–"}</b><span>revisions done on time</span></div>
+    <div class="stat ${weak?"alert":""}"><b class="mono">${weak}</b><span>weak topics</span></div>
+    <div class="stat"><b class="mono">${days30.size}/30</b><span>active days</span></div></div>`;
+  const loads=[];for(let i=0;i<14;i++){const d=addDays(td,i);loads.push({d,n:act.filter(t=>t.nextDue&&(i===0?t.nextDue<=d:t.nextDue===d)).length})}
+  const mx=Math.max(1,...loads.map(l=>l.n));
+  h+=`<div><h2>Revision load, next 14 days</h2><div class="hint">Today's bar includes overdue items. A tall bar means you should log fewer new topics that day.</div><div class="load">${loads.map((l,i)=>`<div><em>${l.n||""}</em><span class="col ${i===0?"t":""}" style="height:${l.n/mx*80}%"></span><small>${parse(l.d).getDate()}</small></div>`).join("")}</div></div>`;
+  const cnt={};act.forEach(t=>{cnt[t.studied]=(cnt[t.studied]||0)+1;(t.history||[]).forEach(x=>cnt[x.date]=(cnt[x.date]||0)+1)});
+  const cells=[];for(let i=55;i>=0;i--){const d=addDays(td,-i);const n=cnt[d]||0;cells.push(`<span class="${n>=10?"l3":n>=4?"l2":n>0?"l1":""}" title="${fmt(d)}: ${n}"></span>`)}
+  h+=`<div><h2>Last 8 weeks</h2><div class="hint" style="margin-bottom:8px">Each square is one day; darker means more topics logged or revised.</div><div class="heat">${cells.join("")}</div></div>`;
+  const rows=SUBJECTS.map(s=>{const ts=act.filter(t=>t.subject===s);const sc=[];ts.forEach(t=>{if(t.score!=null)sc.push(t.score);(t.history||[]).forEach(x=>{if(x.score!=null)sc.push(x.score)})});return {s,n:ts.length,w:ts.filter(t=>t.weak).length,avg:sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length):null}});
+  const mxn=Math.max(1,...rows.map(r=>r.n));
+  h+=`<div><h2>By subject</h2><div class="hint" style="margin-bottom:8px">Bar = topics logged (red part = weak). Right = average MCQ score.</div><div class="bars">${rows.map(r=>`<div class="bar"><span>${r.s}</span><span class="track"><span class="fill" style="width:${(r.n-r.w)/mxn*100}%"></span><span class="fillw" style="width:${r.w/mxn*100}%"></span></span><span class="v">${r.n} · ${r.avg!=null?r.avg+"%":"–"}</span></div>`).join("")}</div></div>`;
+  h+=`<div class="field" style="max-width:280px"><label for="exam">Exam date (for the countdown)</label><input type="date" id="exam" value="${esc(lsGet(LS.exam,""))}"></div>`;
+  return h;
+}
+function viewSettings(){
+  const d=daysSinceBackup();
+  return `<div>
+    <h2>Where your data is</h2>
+    <div class="hint">Everything is saved inside this browser on this device. There's no account and nothing is uploaded. Use one device as your main one (your phone), and download a backup every week so you never lose it.</div>
+  </div>
+  <div class="add" style="display:flex;flex-direction:column;gap:12px">
+    <div><span class="lbl">Backup</span><div class="hint">${d===null?"No backup yet.":`Last backup: ${d===0?"today":d+" days ago"}.`} ${topics.length} topics, ${tests.length} tests.</div></div>
+    <div class="toolbar"><button class="btn primary" type="button" data-act="backup">Download backup</button><button class="btn" type="button" data-act="restore">Restore from backup</button><button class="btn" type="button" data-act="csv">Export for Excel (CSV)</button></div>
+    <input type="file" id="restorefile" accept=".json,application/json" hidden>
+    ${confirmDel==="restore"?`<div class="notice">Restoring replaces everything on this device with the backup file. <button class="btn danger" type="button" data-act="restoreyes">Choose backup file</button> <button class="btn ghost" type="button" data-act="delno">Cancel</button></div>`:""}
+  </div>
+  <div class="add" style="display:flex;flex-direction:column;gap:12px">
+    <div><span class="lbl">Daily reminder</span><div class="hint">Adds a 7:00 AM event to Google Calendar that repeats every day, with a link back here. Your phone will notify you like any calendar event. Change the time inside Calendar if you want.</div></div>
+    <div><a class="btn primary" style="display:inline-block;text-decoration:none" href="${calendarLink()}" target="_blank" rel="noopener" data-act="remind">Add daily reminder to Google Calendar</a></div>
+  </div>
+  <div class="add" style="display:flex;flex-direction:column;gap:8px">
+    <span class="lbl">Put it on your home screen</span>
+    <ol class="steps"><li><b>Android (Chrome):</b> ⋮ menu → <b>Add to Home screen</b> or <b>Install app</b>.</li><li><b>iPhone (Safari):</b> Share → <b>Add to Home Screen</b>.</li></ol>
+    <span class="hint">Always open it from that icon so it uses the same saved data.</span>
+  </div>`;
+}
+function render(){
+  const app=document.getElementById("app");
+  const html={today:viewToday,add:viewAdd,topics:viewTopics,tests:viewTests,progress:viewProgress,settings:viewSettings}[view]();
+  app.innerHTML=`<section class="view">${view==="today"&&topics.length>=5&&(daysSinceBackup()===null||daysSinceBackup()>=7)?`<div class="notice">It's been a while since your last backup. Open ⚙ and tap <b>Download backup</b>.</div>`:""}${html}</section>`;
+  document.querySelectorAll("#tabs button").forEach(x=>x.setAttribute("aria-selected",x.dataset.v===view));
+  const due=topics.filter(t=>t.nextDue&&t.nextDue<=today()).length;
+  document.getElementById("tab-today").innerHTML="Today"+(due?`<span class="n">${due}</span>`:"");
+  renderCountdown();paintSync();
+}
+function safeRender(){
+  const a=document.activeElement;
+  if(a&&a.closest&&a.closest("#app")&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)){pendingRender=true;return}
+  render();
+}
+document.addEventListener("focusout",()=>setTimeout(()=>{if(pendingRender){const a=document.activeElement;if(!(a&&a.closest&&a.closest("#app")&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))){pendingRender=false;render()}}},0));
+
+// ---------- events ----------
+document.getElementById("tabs").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-v]");if(!b)return;
+  view=b.dataset.v;confirmDel=null;lsSet(LS.view,view);render();
+});
+const app=document.getElementById("app");
+app.addEventListener("input",e=>{
+  const id=e.target.id;
+  if(id.startsWith("sc-"))drafts[id.slice(3)]=e.target.value;
+  if(id==="q"){filter.q=e.target.value;const pos=e.target.selectionStart;render();const q=document.getElementById("q");q.focus();q.setSelectionRange(pos,pos)}
+  if(id==="f-topics"){const n=e.target.value.split("\n").map(s=>s.trim()).filter(Boolean).length;document.getElementById("f-count").textContent=n?`${n} topic${n>1?"s":""} will be saved.`:"Each line becomes its own topic with its own revision dates."}
+});
+app.addEventListener("change",e=>{
+  const id=e.target.id;
+  if(id==="fs"){filter.subject=e.target.value;render()}
+  if(id==="fst"){filter.status=e.target.value;render()}
+  if(id==="restorefile"&&e.target.files[0]){
+    const f=e.target.files[0];const r=new FileReader();
+    r.onload=()=>{try{const d=JSON.parse(r.result);if(d.app!=="revision-ladder"||!Array.isArray(d.topics))throw 0;
+      topics=d.topics;tests=d.tests||[];saveLocal();confirmDel=null;view="today";lsSet(LS.view,"today");render();toast(`Restored ${topics.length} topics and ${tests.length} tests.`)}
+      catch(err){toast("That file isn't a Revision Ladder backup.")}};
+    r.readAsText(f);
+  }
+  if(id==="exam"){lsSet(LS.exam,e.target.value);renderCountdown();toast("Exam date saved on this device")}
+});
+app.addEventListener("click",e=>{
+  const sb=e.target.closest("[data-subj]");
+  if(sb){addState.subject=sb.dataset.subj;document.querySelectorAll("#subj button").forEach(x=>x.setAttribute("aria-pressed",x===sb));return}
+  const src=e.target.closest("[data-src]");
+  if(src){addState.source=src.dataset.src;document.querySelectorAll("#src button").forEach(x=>x.setAttribute("aria-pressed",x===src));document.getElementById("scorewrap").hidden=addState.source!=="MCQ";return}
+  const b=e.target.closest("[data-act]");if(!b)return;
+  if(b.tagName!=="A")e.preventDefault();
+  const id=b.dataset.id, t=topics.find(x=>x.id===id), act=b.dataset.act;
+  const P=(fields,msg)=>commit([{type:"patch",coll:"topics",id,fields}],msg);
+  if(act==="done"&&t){
+    let sc=null;const inp=document.getElementById("sc-"+id);
+    if(inp){sc=parseScore(inp.value);if(Number.isNaN(sc)){toast("Enter the score like 18/25 or 72");inp.focus();return}}
+    const {upd,msg}=completeStep(t,sc);delete drafts[id];P(upd,msg);
+  }
+  if(act==="snooze"&&t)P({nextDue:addDays(today(),1)},"Moved to tomorrow");
+  if(act==="restart"&&t)P({studied:today(),stage:0,nextDue:addDays(today(),STEPS[0].d)},"Schedule restarted from today");
+  if(act==="toggle"){openId=openId===id?null:id;confirmDel=null;render()}
+  if(act==="savenote"&&t)P({note:document.getElementById("n-"+id).value.trim()},"Note saved");
+  if(act==="weak"&&t)P({weak:!t.weak},t.weak?"Unmarked":"Marked weak");
+  if(act==="del"||act==="tdel"){confirmDel=id;render()}
+  if(act==="delno"){confirmDel=null;render()}
+  if(act==="delyes"){confirmDel=null;openId=null;commit([{type:"del",coll:"topics",id}],"Deleted")}
+  if(act==="tdelyes"){confirmDel=null;commit([{type:"del",coll:"tests",id}],"Test deleted")}
+  if(act==="backup")backup();
+  if(act==="csv")exportCsv();
+  if(act==="restore"){confirmDel="restore";render()}
+  if(act==="restoreyes"){document.getElementById("restorefile").click()}
+  if(act==="remind"){lsSet(LS.remind,Date.now())}
+});
+app.addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(e.target.id==="addform"){
+    const lines=document.getElementById("f-topics").value.split("\n").map(s=>s.replace(/^[-•*\d.)\s]+/,"").trim()).filter(Boolean);
+    if(!addState.subject){toast("Pick a subject first");return}
+    if(!lines.length){toast("Type at least one topic");document.getElementById("f-topics").focus();return}
+    const date=document.getElementById("f-date").value||today();
+    let sc=null;if(addState.source==="MCQ"){sc=parseScore(document.getElementById("f-score").value);if(Number.isNaN(sc)){toast("Enter the score like 18/25 or 72");return}}
+    const note=document.getElementById("f-note").value.trim();
+    const ops=lines.map(l=>({type:"put",coll:"topics",doc:newTopic(addState.subject,l,addState.source,date,sc,note)}));
+    document.activeElement&&document.activeElement.blur();pendingRender=false;
+    commit(ops,`Saved ${lines.length} topic${lines.length>1?"s":""}. First revision ${fmt(addDays(date,1))}.`);
+  }
+  if(e.target.id==="testform"){
+    const sc=parseScore(document.getElementById("t-score").value);
+    if(Number.isNaN(sc)){toast("Enter the score like 142/200 or 71");return}
+    const doc={id:uid(),type:document.getElementById("t-type").value,name:document.getElementById("t-name").value.trim(),date:document.getElementById("t-date").value||today(),score:sc,rank:document.getElementById("t-rank").value.trim(),notes:document.getElementById("t-notes").value.trim(),created:Date.now()};
+    document.activeElement&&document.activeElement.blur();pendingRender=false;
+    commit([{type:"put",coll:"tests",doc}],"Test saved");
+  }
+});
+
+// ---------- boot ----------
+render();
+if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js").catch(()=>{})}
+window.addEventListener("storage",e=>{if(e.key===LS.data){const d=lsGet(LS.data,{topics:[],tests:[]});topics=d.topics||[];tests=d.tests||[];safeRender()}});
+})();
+</script>
+</body>
+</html>
