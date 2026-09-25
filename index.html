@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Revision Ladder</title>
-<meta name="theme-color" content="#1F6F5C">
+<meta name="theme-color" content="#5B3FE0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Revision">
@@ -12,137 +12,173 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
 <style>
 :root{
-  --bg:#F3F6F5; --surface:#FFFFFF; --sunk:#E8EEEC; --ink:#15201D; --muted:#5B6B66; --line:#D5DEDB;
-  --accent:#1F6F5C; --accent-ink:#FFFFFF; --accent-soft:#D8EDE6;
-  --hi:#F2C94C; --hi-soft:#FBF0C9; --bad:#B8432F; --bad-soft:#F6DDD7; --good:#2E7D4F;
-  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
-  --body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --bg:#F5F4FF; --surface:#FFFFFF; --sunk:#EEECFB; --ink:#1C1838; --muted:#625D80; --line:#E1DEF3;
+  --accent:#6246EA; --accent-ink:#FFFFFF; --accent-soft:#E9E4FF;
+  --hero:#5B3FE0; --hero-ink:#FFFFFF; --hero-sub:#D9D1FF;
+  --hi:#FFA41B; --hi-soft:#FFF1D6; --hi-ink:#7A4A00;
+  --bad:#E5395B; --bad-soft:#FFE1E7; --good:#10A477; --good-soft:#D8F5EA; --sky:#2F8CFF; --sky-soft:#DDEBFF;
+  --chip-l:92%; --chip-s:85%; --chip-tl:30%;
+  --p1:#2F8CFF; --p2:#6246EA; --p3:#10A477; --p4:#FFA41B; --p5:#E5395B;
+  --display:"Lexend",ui-rounded,system-ui,sans-serif;
+  --body:"Nunito Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Lexend",ui-rounded,system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0E1513; --surface:#16201D; --sunk:#1D2926; --ink:#E3ECE9; --muted:#93A5A0; --line:#2A3834;
-    --accent:#5CC3A5; --accent-ink:#0B1411; --accent-soft:#1D3A32;
-    --hi:#E9C052; --hi-soft:#3A331C; --bad:#F08A76; --bad-soft:#3C231E; --good:#6FCF97;
+    --bg:#121022; --surface:#1C1933; --sunk:#26223F; --ink:#EEEBFF; --muted:#A9A3C9; --line:#332E52;
+    --accent:#9C88FF; --accent-ink:#140F2E; --accent-soft:#2D2654;
+    --hero:#2A2250; --hero-ink:#F3F0FF; --hero-sub:#B9AEF0;
+    --hi:#FFB547; --hi-soft:#3A2C12; --hi-ink:#FFD28A;
+    --bad:#FF7A93; --bad-soft:#3D1A24; --good:#4FD1A5; --good-soft:#133329; --sky:#6EB0FF; --sky-soft:#16294A;
+    --chip-l:24%; --chip-s:45%; --chip-tl:82%;
+    --p1:#6EB0FF; --p2:#9C88FF; --p3:#4FD1A5; --p4:#FFB547; --p5:#FF7A93;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0E1513; --surface:#16201D; --sunk:#1D2926; --ink:#E3ECE9; --muted:#93A5A0; --line:#2A3834;
-  --accent:#5CC3A5; --accent-ink:#0B1411; --accent-soft:#1D3A32;
-  --hi:#E9C052; --hi-soft:#3A331C; --bad:#F08A76; --bad-soft:#3C231E; --good:#6FCF97;
+  --bg:#121022; --surface:#1C1933; --sunk:#26223F; --ink:#EEEBFF; --muted:#A9A3C9; --line:#332E52;
+  --accent:#9C88FF; --accent-ink:#140F2E; --accent-soft:#2D2654;
+  --hero:#2A2250; --hero-ink:#F3F0FF; --hero-sub:#B9AEF0;
+  --hi:#FFB547; --hi-soft:#3A2C12; --hi-ink:#FFD28A;
+  --bad:#FF7A93; --bad-soft:#3D1A24; --good:#4FD1A5; --good-soft:#133329; --sky:#6EB0FF; --sky-soft:#16294A;
+  --chip-l:24%; --chip-s:45%; --chip-tl:82%;
+  --p1:#6EB0FF; --p2:#9C88FF; --p3:#4FD1A5; --p4:#FFB547; --p5:#FF7A93;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-inline:16px;padding-block:0 48px}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.5 var(--body);padding-inline:16px;padding-block:env(safe-area-inset-top,0px) 48px}
 .wrap{max-width:760px;margin:0 auto}
-header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:22px 12px}
-h1{font:700 30px/1.05 var(--display);letter-spacing:-.01em;margin:0}
-.sub{color:var(--muted);font-size:13px;margin-top:4px}
-.countdown{font:500 13px var(--mono);color:var(--muted);text-align:right}
-.countdown b{display:block;font:700 26px/1 var(--display);color:var(--ink)}
-nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;padding-block:8px;border-bottom:1px solid var(--line);overflow-x:auto}
-nav.tabs button{flex:1 0 auto;border:0;background:transparent;color:var(--muted);font:600 14px var(--body);padding:8px 12px;border-radius:8px;cursor:pointer}
-nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
-nav.tabs .n{font:500 11px var(--mono);margin-left:4px;background:var(--hi);color:#2A2205;border-radius:9px;padding:1px 6px}
-section.view{padding-top:18px;display:flex;flex-direction:column;gap:22px}
-h2{font:700 18px var(--display);margin:0 0 8px;display:flex;align-items:baseline;gap:8px}
-h2 .c{font:500 12px var(--mono);color:var(--muted)}
-.eyebrow{font:600 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
-.item{display:grid;grid-template-columns:1fr auto;gap:8px 12px;padding:12px 14px;border-top:1px solid var(--line);align-items:center}
-.item:first-child{border-top:0}
-.item.overdue{box-shadow:inset 3px 0 0 var(--bad)}
-.item.today{box-shadow:inset 3px 0 0 var(--hi)}
-.t-title{font-weight:600}
-.meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12.5px;color:var(--muted);margin-top:3px}
-.chip{font:600 11px var(--body);letter-spacing:.03em;padding:2px 7px;border-radius:6px;background:var(--sunk);color:var(--ink)}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* header band */
+header.top{margin-top:14px;background:var(--hero);color:var(--hero-ink);border-radius:22px;padding:20px 20px 18px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;position:relative;overflow:hidden}
+header.top::after{content:"";position:absolute;right:-18px;top:-10px;width:120px;height:150px;opacity:.16;pointer-events:none;
+  background:linear-gradient(var(--hero-ink),var(--hero-ink)) 20px 0/10px 100% no-repeat,linear-gradient(var(--hero-ink),var(--hero-ink)) 86px 0/10px 100% no-repeat,
+  repeating-linear-gradient(180deg,transparent 0 22px,var(--hero-ink) 22px 30px) 30px 0/56px 100% no-repeat;transform:rotate(14deg)}
+h1{font:700 30px/1.05 var(--display);letter-spacing:-.02em;margin:0}
+.sub{color:var(--hero-sub);font:500 13px var(--display);margin-top:6px}
+.countdown{font:500 12.5px var(--display);color:var(--hero-sub);text-align:right;position:relative;z-index:1}
+.countdown b{display:block;font:700 30px/1 var(--display);color:var(--hi)}
+.sync{font:500 12px var(--display);color:var(--hero-sub);display:flex;gap:6px;align-items:center;justify-content:flex-end;margin-top:8px;position:relative;z-index:1}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--good)}
+.sync.wait i{background:var(--hi)}
+
+/* tabs */
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:6px;padding-block:12px 10px;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:1 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:600 14px var(--display);padding:9px 14px;border-radius:999px;cursor:pointer}
+nav.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+nav.tabs .n{font:600 11px var(--display);margin-left:6px;background:var(--hi);color:#3B2400;border-radius:9px;padding:1px 7px}
+
+section.view{padding-top:8px;display:flex;flex-direction:column;gap:22px}
+h2{font:600 18px var(--display);margin:0 0 10px;display:flex;align-items:baseline;gap:8px}
+h2 .c{font:600 12px var(--display);color:var(--accent);background:var(--accent-soft);padding:1px 8px;border-radius:9px}
+
+/* lists */
+.list{display:flex;flex-direction:column;gap:8px}
+.item{display:grid;grid-template-columns:1fr auto;gap:8px 12px;padding:13px 15px;background:var(--surface);border:1px solid var(--line);border-radius:14px;align-items:center}
+.item.overdue{border-left:5px solid var(--bad)}
+.item.today{border-left:5px solid var(--hi)}
+.t-title{font:600 15.5px var(--body)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12.5px;color:var(--muted);margin-top:4px}
+.chip{font:600 11.5px var(--display);padding:2px 9px;border-radius:999px;background:var(--sunk);color:var(--ink)}
+.chip.subj{background:hsl(var(--h) var(--chip-s) var(--chip-l));color:hsl(var(--h) 65% var(--chip-tl))}
 .chip.weak{background:var(--bad-soft);color:var(--bad)}
-.chip.step{background:var(--accent-soft);color:var(--accent)}
-.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.chip.step{background:var(--sky-soft);color:var(--sky)}
+.late{color:var(--bad);font-weight:700}
+.duet{color:var(--hi-ink);font-weight:700}
+
+/* buttons & inputs */
 .actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 13px var(--body);padding:7px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
-.btn:hover{border-color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 13.5px var(--display);padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.done{background:var(--good);border-color:var(--good);color:#fff}
 .btn.danger{color:var(--bad);border-color:var(--bad)}
 .btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
-.btn:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,nav.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-input,textarea,select{font:15px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%}
-input.score{width:84px;padding:6px 8px;font-family:var(--mono)}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,nav.tabs button:focus-visible,.chips button:focus-visible{outline:3px solid var(--accent-soft);outline-offset:1px;border-color:var(--accent)}
+input,textarea,select{font:15.5px var(--body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;width:100%}
+input.score{width:88px;padding:7px 10px;font-family:var(--mono);border-radius:999px}
+
+/* ladder pips */
 .ladder{display:flex;gap:3px;align-items:center}
-.ladder i{width:18px;height:6px;border-radius:3px;background:var(--line)}
-.ladder i.on{background:var(--accent)}
-.ladder i.cur{background:var(--hi)}
-.empty{padding:18px;color:var(--muted);text-align:center;border:1px dashed var(--line);border-radius:12px}
-.summary{display:flex;gap:10px;flex-wrap:wrap}
-.stat{flex:1 1 140px;padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
-.stat b{display:block;font:700 26px/1.1 var(--display)}
-.stat span{font-size:12.5px;color:var(--muted)}
-.stat.alert b{color:var(--bad)}
-form.add{display:flex;flex-direction:column;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.ladder i{width:16px;height:7px;border-radius:4px;background:var(--line)}
+.ladder i.on:nth-child(1){background:var(--p1)} .ladder i.on:nth-child(2){background:var(--p2)} .ladder i.on:nth-child(3){background:var(--p3)} .ladder i.on:nth-child(4){background:var(--p4)} .ladder i.on:nth-child(5){background:var(--p5)}
+.ladder i.cur{background:transparent;box-shadow:inset 0 0 0 2px var(--hi)}
+
+.empty{padding:22px;color:var(--muted);text-align:center;border:2px dashed var(--line);border-radius:16px;background:var(--surface)}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{padding:14px;border-radius:16px}
+.stat b{display:block;font:700 30px/1.1 var(--display)}
+.stat span{font:500 12.5px var(--display)}
+.stat.c-bad{background:var(--bad-soft);color:var(--bad)}
+.stat.c-hi{background:var(--hi-soft);color:var(--hi-ink)}
+.stat.c-good{background:var(--good-soft);color:var(--good)}
+.stat.c-acc{background:var(--accent-soft);color:var(--accent)}
+.stat.c-sky{background:var(--sky-soft);color:var(--sky)}
+
+form.add,.panel{display:flex;flex-direction:column;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
 .field{display:flex;flex-direction:column;gap:6px}
-.field label,.lbl{font:600 13px var(--body)}
-.hint{font-size:12.5px;color:var(--muted)}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chips button{border:1px solid var(--line);background:var(--bg);color:var(--ink);font:500 13px var(--body);padding:6px 10px;border-radius:18px;cursor:pointer}
-.chips button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.field label,.lbl{font:600 13.5px var(--display)}
+.hint{font-size:13px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chips button{border:1.5px solid transparent;background:hsl(var(--h) var(--chip-s) var(--chip-l));color:hsl(var(--h) 65% var(--chip-tl));font:600 13px var(--display);padding:7px 12px;border-radius:999px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:hsl(var(--h) 70% 45%);color:#fff;border-color:hsl(var(--h) 70% 38%)}
 .row{display:flex;gap:12px;flex-wrap:wrap}
 .row>.field{flex:1 1 160px}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
-.seg button{border:0;background:var(--surface);color:var(--muted);font:600 14px var(--body);padding:8px 16px;cursor:pointer}
+.seg{display:inline-flex;background:var(--sunk);border-radius:999px;padding:3px;gap:3px;align-self:flex-start}
+.seg button{border:0;background:transparent;color:var(--muted);font:600 14px var(--display);padding:7px 18px;border-radius:999px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
-.schedule{font:13px var(--mono);color:var(--muted);background:var(--sunk);border-radius:8px;padding:10px 12px;line-height:1.7}
+.schedule{font:500 13px/1.8 var(--display);color:var(--muted);background:var(--sunk);border-radius:12px;padding:10px 14px}
+.schedule b:nth-of-type(1){color:var(--p1)} .schedule b:nth-of-type(2){color:var(--p2)} .schedule b:nth-of-type(3){color:var(--p3)} .schedule b:nth-of-type(4){color:var(--p4)} .schedule b:nth-of-type(5){color:var(--p5)}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap}
 .toolbar input{flex:1 1 200px}
 .toolbar select{flex:0 1 180px}
-.detail{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;padding-top:8px;border-top:1px dashed var(--line)}
-.hist{font:12.5px var(--mono);color:var(--muted)}
-.bars{display:flex;flex-direction:column;gap:8px}
-.bar{display:grid;grid-template-columns:110px 1fr 90px;gap:10px;align-items:center;font-size:13px}
-.bar .track{height:10px;background:var(--sunk);border-radius:5px;overflow:hidden;display:flex}
-.bar .fill{background:var(--accent)}
+.detail{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.hist{font:13px/1.7 var(--display);color:var(--muted)}
+
+/* progress */
+.bars{display:flex;flex-direction:column;gap:9px}
+.bar{display:grid;grid-template-columns:110px 1fr 90px;gap:10px;align-items:center;font:500 13px var(--display)}
+.bar .track{height:12px;background:var(--sunk);border-radius:6px;overflow:hidden;display:flex}
+.bar .fill{background:hsl(var(--h) 70% 55%)}
 .bar .fillw{background:var(--bad)}
-.bar .v{font:12px var(--mono);color:var(--muted);text-align:right}
-.load{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;align-items:end;height:110px;padding-top:14px}
+.bar .v{font:500 12px var(--mono);color:var(--muted);text-align:right}
+.load{display:grid;grid-template-columns:repeat(14,1fr);gap:4px;align-items:end;height:120px;padding-top:14px}
 .load div{display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end}
-.load .col{width:100%;background:var(--accent);border-radius:3px 3px 0 0;min-height:2px}
+.load .col{width:100%;background:linear-gradient(180deg,var(--accent),var(--sky));border-radius:5px 5px 2px 2px;min-height:3px}
 .load .col.t{background:var(--hi)}
-.load small{font:10px var(--mono);color:var(--muted)}
-.load em{font:10px var(--mono);font-style:normal;color:var(--ink)}
+.load small{font:500 10px var(--mono);color:var(--muted)}
+.load em{font:600 10px var(--mono);font-style:normal;color:var(--ink)}
 .heat{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;max-width:340px}
-.heat span{aspect-ratio:1;border-radius:4px;background:var(--sunk)}
-.heat span.l1{background:var(--accent-soft)}
-.heat span.l2{background:color-mix(in srgb,var(--accent) 60%,var(--accent-soft))}
-.heat span.l3{background:var(--accent)}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
-.notice{background:var(--hi-soft);border-radius:10px;padding:12px 14px;font-size:14px}
+.heat span{aspect-ratio:1;border-radius:5px;background:var(--sunk)}
+.heat span.l1{background:color-mix(in srgb,var(--good) 30%,var(--sunk))}
+.heat span.l2{background:color-mix(in srgb,var(--good) 65%,var(--sunk))}
+.heat span.l3{background:var(--good)}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font:600 14px var(--display);z-index:20;max-width:calc(100% - 32px);text-align:center}
+.notice{background:var(--hi-soft);color:var(--ink);border-radius:14px;padding:12px 14px;font-size:14px}
 table.tests{width:100%;border-collapse:collapse;font-size:14px}
-table.tests th{text-align:left;font:600 11px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line)}
+table.tests th{text-align:left;font:600 11.5px var(--display);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:9px 10px;border-bottom:1px solid var(--line)}
 table.tests td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
-.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+code{font:13px var(--mono);background:var(--sunk);padding:1px 5px;border-radius:4px}
 @media (max-width:520px){
   .item{grid-template-columns:1fr}
   .actions{justify-content:flex-start}
   .bar{grid-template-columns:84px 1fr 70px}
-  h1{font-size:26px}
+  .summary{grid-template-columns:repeat(2,1fr)}
+  h1{font-size:27px}
   .countdown{text-align:left}
   .sync{justify-content:flex-start}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-</style>
-<style>
-[hidden]{display:none!important}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;padding-top:env(safe-area-inset-top,0px)}
-.sync{font:500 12px var(--mono);color:var(--muted);display:flex;gap:6px;align-items:center;justify-content:flex-end;margin-top:6px}
-.sync i{width:8px;height:8px;border-radius:50%;background:var(--good)}
-.sync.wait i{background:var(--hi)}
-.sync.err i{background:var(--bad)}
-.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px}
-code{font:13px var(--mono);background:var(--sunk);padding:1px 5px;border-radius:4px}
 </style>
 </head>
 <body>
@@ -150,7 +186,7 @@ code{font:13px var(--mono);background:var(--sunk);padding:1px 5px;border-radius:
   <header class="top">
     <div>
       <h1>Revision Ladder</h1>
-      <div class="sub">NEET PG 2027 · Day 1 → 3 → 7 → 28 → 60</div>
+      <div class="sub" id="goal">Day 1 → 3 → 7 → 28 → 60</div>
     </div>
     <div>
       <div class="countdown" id="countdown"></div>
@@ -171,7 +207,14 @@ code{font:13px var(--mono);background:var(--sunk);padding:1px 5px;border-radius:
 
 <script>
 (function(){
-const SUBJECTS=["Anatomy","Physiology","Biochemistry","Pathology","Pharmacology","Microbiology","FMT","PSM","ENT","Ophthalmology","Medicine","Surgery","OBG","Pediatrics","Orthopedics","Dermatology","Psychiatry","Anaesthesia","Radiology"];
+const DEFAULT_SUBJECTS=["Anatomy","Physiology","Biochemistry","Pathology","Pharmacology","Microbiology","FMT","PSM","ENT","Ophthalmology","Medicine","Surgery","OBG","Pediatrics","Orthopedics","Dermatology","Psychiatry","Anaesthesia","Radiology"];
+const SETTINGS_KEY="rl-settings";
+function loadSettings(){try{const v=JSON.parse(localStorage.getItem(SETTINGS_KEY)||"null");if(v&&Array.isArray(v.subjects)&&v.subjects.length)return v}catch(e){}return {goal:"NEET PG 2027",subjects:DEFAULT_SUBJECTS.slice()}}
+let settings=loadSettings();
+let SUBJECTS=settings.subjects;
+function saveSettings(){try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings))}catch(e){}SUBJECTS=settings.subjects}
+function hue(name){const i=SUBJECTS.indexOf(name);if(i>=0)return Math.round((i*137.508+250)%360);let h=0;for(const c of String(name))h=(h*31+c.charCodeAt(0))%360;return h}
+const subjChip=n=>`<span class="chip subj" style="--h:${hue(n)}">${esc(n)}</span>`;
 const STEPS=[{d:1,kind:"Revise"},{d:3,kind:"MCQs"},{d:7,kind:"Revise"},{d:28,kind:"MCQs"},{d:60,kind:"Final revise"}];
 const WEAK_CUTOFF=60, REDO_GAP=3;
 
@@ -234,7 +277,7 @@ function downloadFile(name,text,type){
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);
 }
 function backup(){
-  downloadFile(`revision-ladder-backup-${today()}.json`,JSON.stringify({app:"revision-ladder",version:1,exported:new Date().toISOString(),topics,tests}),"application/json");
+  downloadFile(`revision-ladder-backup-${today()}.json`,JSON.stringify({app:"revision-ladder",version:1,exported:new Date().toISOString(),settings,topics,tests}),"application/json");
   lsSet(LS.backup,Date.now());paintSync();toast("Backup file downloaded. Keep it in Google Drive or WhatsApp it to yourself.");
 }
 function exportCsv(){
@@ -253,6 +296,7 @@ function calendarLink(){
 
 // ---------- countdown ----------
 function renderCountdown(){
+  document.getElementById("goal").textContent=(settings.goal?settings.goal+" · ":"")+"Day 1 → 3 → 7 → 28 → 60";
   const el=document.getElementById("countdown");const ex=lsGet(LS.exam,"");
   if(ex){const n=diff(today(),ex);el.innerHTML=`<b class="mono">${n}</b>days to exam (${fmt(ex)} ${ex.slice(0,4)})`}
   else el.innerHTML=`<b class="mono">${topics.filter(t=>!t.backlog).length}</b>topics logged`;
@@ -287,12 +331,12 @@ function dueItem(t,cls){
   return `<div class="item ${cls}" data-id="${t.id}">
     <div>
       <div class="t-title">${esc(t.topic)}</div>
-      <div class="meta"><span class="chip">${esc(t.subject)}</span><span class="chip step">${stepLabel(t)}</span>${t.weak?'<span class="chip weak">Weak</span>':""}${ladder(t)}
-      <span class="mono">${late>0?`${late}d overdue`:"due today"}</span></div>
+      <div class="meta">${subjChip(t.subject)}<span class="chip step">${stepLabel(t)}</span>${t.weak?'<span class="chip weak">Weak</span>':""}${ladder(t)}
+      <span class="${late>0?"late":"duet"}">${late>0?`${late}d overdue`:"due today"}</span></div>
     </div>
     <div class="actions">
       ${needsScore?`<input class="score" id="sc-${t.id}" placeholder="18/25" inputmode="decimal" aria-label="MCQ score for ${esc(t.topic)}" value="${esc(drafts[t.id]||"")}">`:""}
-      <button class="btn primary" data-act="done" data-id="${t.id}">Done</button>
+      <button class="btn done" data-act="done" data-id="${t.id}">✓ Done</button>
       <button class="btn ghost" data-act="snooze" data-id="${t.id}">Tomorrow</button>
     </div>
   </div>`;
@@ -305,10 +349,10 @@ function viewToday(){
   const studiedToday=topics.filter(t=>t.studied===td).length;
   const doneToday=topics.reduce((n,t)=>n+(t.history||[]).filter(h=>h.date===td).length,0);
   let h=`<div class="summary">
-    <div class="stat ${overdue.length?"alert":""}"><b class="mono">${overdue.length}</b><span>overdue</span></div>
-    <div class="stat"><b class="mono">${due.length}</b><span>due today</span></div>
-    <div class="stat"><b class="mono">${doneToday}</b><span>revisions done today</span></div>
-    <div class="stat"><b class="mono">${studiedToday}</b><span>new topics today</span></div>
+    <div class="stat c-bad"><b class="num">${overdue.length}</b><span>overdue</span></div>
+    <div class="stat c-hi"><b class="num">${due.length}</b><span>due today</span></div>
+    <div class="stat c-good"><b class="num">${doneToday}</b><span>revised today</span></div>
+    <div class="stat c-acc"><b class="num">${studiedToday}</b><span>new topics today</span></div>
   </div>`;
   if(!overdue.length&&!due.length)h+=`<div class="empty">${active.length?"Nothing due today. Log what you study with <b>+ Log</b>.":"No topics yet. Tap <b>+ Log</b> after your first lecture and paste the topic list, one per line."}</div>`;
   if(overdue.length)h+=`<div><h2>Overdue <span class="c">${overdue.length}</span></h2><div class="list">${overdue.map(t=>dueItem(t,"overdue")).join("")}</div><div class="hint" style="margin-top:6px">Clear these first. The next step is counted from the day you actually revise.</div></div>`;
@@ -320,9 +364,9 @@ function viewToday(){
   return h;
 }
 function viewAdd(){
-  const s=STEPS.map(x=>`Day ${x.d}: ${x.kind}`).join(" → ");
+  const s=STEPS.map(x=>`<b>Day ${x.d}</b> ${x.kind}`).join(" → ");
   return `<form class="add" id="addform" novalidate>
-    <div class="field"><span class="lbl">Subject</span><div class="chips" id="subj">${SUBJECTS.map(x=>`<button type="button" aria-pressed="${addState.subject===x}" data-subj="${x}">${x}</button>`).join("")}</div></div>
+    <div class="field"><span class="lbl">Subject</span><div class="chips" id="subj">${SUBJECTS.map(x=>`<button type="button" aria-pressed="${addState.subject===x}" data-subj="${esc(x)}" style="--h:${hue(x)}">${esc(x)}</button>`).join("")}</div></div>
     <div class="field"><label for="f-topics">Topics, one per line</label>
       <textarea id="f-topics" rows="5" placeholder="Paste the chapter list from your lecture&#10;Hypothyroidism&#10;Thyrotoxicosis and thyroiditis"></textarea>
       <span class="hint" id="f-count">Each line becomes its own topic with its own revision dates.</span></div>
@@ -343,9 +387,9 @@ function viewTopics(){
   if(filter.status==="due")list=list.filter(t=>t.nextDue&&t.nextDue<=td);
   if(filter.status==="done")list=list.filter(t=>!t.nextDue);
   list.sort((a,b)=>(b.studied||"").localeCompare(a.studied||"")||(b.created||0)-(a.created||0));
-  const subjOpts=SUBJECTS.filter(s=>topics.some(t=>t.subject===s));
+  const subjOpts=[...new Set(topics.map(t=>t.subject))].sort((a,b)=>(SUBJECTS.indexOf(a)+1||999)-(SUBJECTS.indexOf(b)+1||999));
   let h=`<div class="toolbar"><input id="q" placeholder="Search topics and notes" value="${esc(filter.q)}" aria-label="Search">
-    <select id="fs" aria-label="Subject"><option value="">All subjects</option>${subjOpts.map(s=>`<option ${filter.subject===s?"selected":""}>${s}</option>`).join("")}</select>
+    <select id="fs" aria-label="Subject"><option value="">All subjects</option>${subjOpts.map(s=>`<option ${filter.subject===s?"selected":""}>${esc(s)}</option>`).join("")}</select>
     <select id="fst" aria-label="Status"><option value="">Any status</option><option value="due" ${filter.status==="due"?"selected":""}>Due / overdue</option><option value="weak" ${filter.status==="weak"?"selected":""}>Weak</option><option value="done" ${filter.status==="done"?"selected":""}>Ladder complete</option></select></div>`;
   if(!list.length)return h+`<div class="empty">No topics match.</div>`;
   h+=`<div><h2>${list.length} topic${list.length>1?"s":""}</h2><div class="list">`;
@@ -353,7 +397,7 @@ function viewTopics(){
     const open=openId===t.id;
     h+=`<div class="item" data-id="${t.id}">
       <div><div class="t-title">${esc(t.topic)}</div>
-      <div class="meta"><span class="chip">${esc(t.subject)}</span>${t.weak?'<span class="chip weak">Weak</span>':""}${ladder(t)}
+      <div class="meta">${subjChip(t.subject)}${t.weak?'<span class="chip weak">Weak</span>':""}${ladder(t)}
       <span class="mono">${t.nextDue?`next ${fmt(t.nextDue)}`:"complete"}</span>
       ${t.score!=null?`<span class="mono">first MCQ ${t.score}%</span>`:""}</div></div>
       <div class="actions"><button class="btn ghost" data-act="toggle" data-id="${t.id}" aria-expanded="${open}">${open?"Close":"Details"}</button></div>
@@ -394,19 +438,20 @@ function viewProgress(){
   const weak=topics.filter(t=>t.weak).length;
   const days30=new Set(); act.forEach(t=>{if(diff(t.studied,td)<30)days30.add(t.studied);(t.history||[]).forEach(x=>{if(diff(x.date,td)<30)days30.add(x.date)})});
   h+=`<div class="summary">
-    <div class="stat"><b class="mono">${act.length}</b><span>topics logged</span></div>
-    <div class="stat"><b class="mono">${total?Math.round(onTime/total*100)+"%":"–"}</b><span>revisions done on time</span></div>
-    <div class="stat ${weak?"alert":""}"><b class="mono">${weak}</b><span>weak topics</span></div>
-    <div class="stat"><b class="mono">${days30.size}/30</b><span>active days</span></div></div>`;
+    <div class="stat c-acc"><b class="num">${act.length}</b><span>topics logged</span></div>
+    <div class="stat c-good"><b class="num">${total?Math.round(onTime/total*100)+"%":"–"}</b><span>revised on time</span></div>
+    <div class="stat c-bad"><b class="num">${weak}</b><span>weak topics</span></div>
+    <div class="stat c-sky"><b class="num">${days30.size}/30</b><span>active days</span></div></div>`;
   const loads=[];for(let i=0;i<14;i++){const d=addDays(td,i);loads.push({d,n:act.filter(t=>t.nextDue&&(i===0?t.nextDue<=d:t.nextDue===d)).length})}
   const mx=Math.max(1,...loads.map(l=>l.n));
   h+=`<div><h2>Revision load, next 14 days</h2><div class="hint">Today's bar includes overdue items. A tall bar means you should log fewer new topics that day.</div><div class="load">${loads.map((l,i)=>`<div><em>${l.n||""}</em><span class="col ${i===0?"t":""}" style="height:${l.n/mx*80}%"></span><small>${parse(l.d).getDate()}</small></div>`).join("")}</div></div>`;
   const cnt={};act.forEach(t=>{cnt[t.studied]=(cnt[t.studied]||0)+1;(t.history||[]).forEach(x=>cnt[x.date]=(cnt[x.date]||0)+1)});
   const cells=[];for(let i=55;i>=0;i--){const d=addDays(td,-i);const n=cnt[d]||0;cells.push(`<span class="${n>=10?"l3":n>=4?"l2":n>0?"l1":""}" title="${fmt(d)}: ${n}"></span>`)}
   h+=`<div><h2>Last 8 weeks</h2><div class="hint" style="margin-bottom:8px">Each square is one day; darker means more topics logged or revised.</div><div class="heat">${cells.join("")}</div></div>`;
-  const rows=SUBJECTS.map(s=>{const ts=act.filter(t=>t.subject===s);const sc=[];ts.forEach(t=>{if(t.score!=null)sc.push(t.score);(t.history||[]).forEach(x=>{if(x.score!=null)sc.push(x.score)})});return {s,n:ts.length,w:ts.filter(t=>t.weak).length,avg:sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length):null}});
+  const allSubj=[...SUBJECTS,...new Set(act.map(t=>t.subject).filter(x=>!SUBJECTS.includes(x)))];
+  const rows=allSubj.map(s=>{const ts=act.filter(t=>t.subject===s);const sc=[];ts.forEach(t=>{if(t.score!=null)sc.push(t.score);(t.history||[]).forEach(x=>{if(x.score!=null)sc.push(x.score)})});return {s,n:ts.length,w:ts.filter(t=>t.weak).length,avg:sc.length?Math.round(sc.reduce((a,b)=>a+b,0)/sc.length):null}});
   const mxn=Math.max(1,...rows.map(r=>r.n));
-  h+=`<div><h2>By subject</h2><div class="hint" style="margin-bottom:8px">Bar = topics logged (red part = weak). Right = average MCQ score.</div><div class="bars">${rows.map(r=>`<div class="bar"><span>${r.s}</span><span class="track"><span class="fill" style="width:${(r.n-r.w)/mxn*100}%"></span><span class="fillw" style="width:${r.w/mxn*100}%"></span></span><span class="v">${r.n} · ${r.avg!=null?r.avg+"%":"–"}</span></div>`).join("")}</div></div>`;
+  h+=`<div><h2>By subject</h2><div class="hint" style="margin-bottom:8px">Bar = topics logged (red part = weak). Right = average MCQ score.</div><div class="bars">${rows.map(r=>`<div class="bar" style="--h:${hue(r.s)}"><span>${esc(r.s)}</span><span class="track"><span class="fill" style="width:${(r.n-r.w)/mxn*100}%"></span><span class="fillw" style="width:${r.w/mxn*100}%"></span></span><span class="v">${r.n} · ${r.avg!=null?r.avg+"%":"–"}</span></div>`).join("")}</div></div>`;
   h+=`<div class="field" style="max-width:280px"><label for="exam">Exam date (for the countdown)</label><input type="date" id="exam" value="${esc(lsGet(LS.exam,""))}"></div>`;
   return h;
 }
@@ -416,6 +461,12 @@ function viewSettings(){
     <h2>Where your data is</h2>
     <div class="hint">Everything is saved inside this browser on this device. There's no account and nothing is uploaded. Use one device as your main one (your phone), and download a backup every week so you never lose it.</div>
   </div>
+  <form class="add" id="courseform" novalidate>
+    <div><span class="lbl">Your exam and subjects</span><div class="hint">Change these for any course: school, college, UPSC, CA, anything.</div></div>
+    <div class="field"><label for="s-goal">Goal / exam name</label><input id="s-goal" value="${esc(settings.goal||"")}" placeholder="e.g. NEET PG 2027"></div>
+    <div class="field"><label for="s-subj">Subjects, one per line</label><textarea id="s-subj" rows="7">${esc(SUBJECTS.join("\n"))}</textarea></div>
+    <div><button class="btn primary" type="submit">Save</button></div>
+  </form>
   <div class="add" style="display:flex;flex-direction:column;gap:12px">
     <div><span class="lbl">Backup</span><div class="hint">${d===null?"No backup yet.":`Last backup: ${d===0?"today":d+" days ago"}.`} ${topics.length} topics, ${tests.length} tests.</div></div>
     <div class="toolbar"><button class="btn primary" type="button" data-act="backup">Download backup</button><button class="btn" type="button" data-act="restore">Restore from backup</button><button class="btn" type="button" data-act="csv">Export for Excel (CSV)</button></div>
@@ -467,7 +518,7 @@ app.addEventListener("change",e=>{
   if(id==="restorefile"&&e.target.files[0]){
     const f=e.target.files[0];const r=new FileReader();
     r.onload=()=>{try{const d=JSON.parse(r.result);if(d.app!=="revision-ladder"||!Array.isArray(d.topics))throw 0;
-      topics=d.topics;tests=d.tests||[];saveLocal();confirmDel=null;view="today";lsSet(LS.view,"today");render();toast(`Restored ${topics.length} topics and ${tests.length} tests.`)}
+      topics=d.topics;tests=d.tests||[];if(d.settings&&Array.isArray(d.settings.subjects)){settings=d.settings;saveSettings()}saveLocal();confirmDel=null;view="today";lsSet(LS.view,"today");render();toast(`Restored ${topics.length} topics and ${tests.length} tests.`)}
       catch(err){toast("That file isn't a Revision Ladder backup.")}};
     r.readAsText(f);
   }
@@ -514,6 +565,13 @@ app.addEventListener("submit",async e=>{
     const ops=lines.map(l=>({type:"put",coll:"topics",doc:newTopic(addState.subject,l,addState.source,date,sc,note)}));
     document.activeElement&&document.activeElement.blur();pendingRender=false;
     commit(ops,`Saved ${lines.length} topic${lines.length>1?"s":""}. First revision ${fmt(addDays(date,1))}.`);
+  }
+  if(e.target.id==="courseform"){
+    const subs=[...new Set(document.getElementById("s-subj").value.split("\n").map(x=>x.trim()).filter(Boolean))];
+    if(!subs.length){toast("Add at least one subject");return}
+    settings={goal:document.getElementById("s-goal").value.trim(),subjects:subs};saveSettings();
+    if(addState.subject&&!SUBJECTS.includes(addState.subject))addState.subject=null;
+    document.activeElement&&document.activeElement.blur();pendingRender=false;render();toast("Saved");
   }
   if(e.target.id==="testform"){
     const sc=parseScore(document.getElementById("t-score").value);
